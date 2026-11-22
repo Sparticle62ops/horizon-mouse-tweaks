@@ -1,12 +1,24 @@
 [package]
-name = "mouse-tweaks"
+name = "horizon-mod-mouse-tweaks"
 version = "1.0.0"
 edition = "2024"
 license = "BSD-3-Clause"
-description = "Mouse Tweaks for Horizon: drag-pickup and wheel item tweaks in menus."
 publish = false
+description = "Exact 1:1 Rust port of MouseTweaks (upstream github.com/YaLTeR/MouseTweaks, BSD-3-Clause): drag-pickup and wheel item tweaks in menus."
 
 [lib]
-path = "mixins/mouse_tweaks/runtime.rs"
+path = "src/lib.rs"
 
 [dependencies]
+horizon-mod-api = { path = ".horizon/sdk/api/crates/horizon-mod-api" }
+
+[workspace]
+
+[workspace.package]
+edition = "2024"
+license = "BSD-3-Clause"
+rust-version = "1.95"
+
+[workspace.lints.clippy]
+too_many_arguments = "allow"
+type_complexity = "allow"

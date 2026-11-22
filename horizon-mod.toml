@@ -1,0 +1,51 @@
+id = "mouse_tweaks"
+name = "Mouse Tweaks"
+version = "1.0.0"
+description = """Drag-pickup and wheel item tweaks in menus. Exact 1:1 Rust port of
+[MouseTweaks](https://github.com/YaLTeR/MouseTweaks) (YaLTeR / Ivan
+Molodetskikh, BSD-3-Clause), ported for the Horizon client by sparticle.
+
+The original's behavior is kept 1:1 in `src/runtime.rs`: left-drag picks up
+slots while empty and drags an item over same slots; right-drag drops one
+item per slot while carrying (with the original's
+`disableRMBDraggingFunctionality` skip-release); the wheel pushes or pulls
+items between slots with the original's scaling, search order, direction and
+crafting-output batch handling. The seven `MouseTweaks.cfg` keys are the
+config surface, driven by the `/mousetweaks` command (the client command
+hook runs it).
+
+## Horizon feature gap, tracked on horizon-rust/horizon
+
+- Client slot and menu interaction surface. The drag and wheel logic needs
+  three things API 0.2 does not expose to a mod crate: the hovered slot
+  number (the screen hooks give the pointer position and the menu's slot
+  count, not the slot under the pointer), the slot stacks and the carried
+  stack (`slot_view` and `inventory_target` are `pub(super)` inside
+  `game::interface`), and a way to click a menu slot the way the screen
+  does (`menu_click` is the server-side menu helper taking `(MenuRef,
+  &[MenuClick])`; there is no client-side click-slot accessor; the old
+  port's `Game::native_on`, zero-arg `container_size` and `NativeScreenView`
+  are gone). The hooks below are real: the screen mouse hooks record the
+  press/release/drag/scroll events and the release hook applies the
+  right-drag skip-release cancel live; the tick executor drains the events
+  and runs the 1:1 decision logic, whose clicks stay pending until the
+  surface lands. (A dedicated issue is linked from the PR.)
+
+Pinned to Horizon f00125f61f794aaa3d4e950d301f353b35b6ee3d, horizon-mixins
+e59da9094f0c2fdda6c627fe9eff22dec6a906f0 and mod API 0.2; exact 1:1 Rust
+port tested against those revisions.
+
+Licence: BSD-3-Clause (upstream, carried, with the upstream notice and
+credit to Ivan Molodetskikh). Upstream:
+https://github.com/YaLTeR/MouseTweaks.
+Source: https://github.com/Sparticle62ops/horizon-mouse-tweaks
+"""
+authors = ["YaLTeR", "sparticle"]
+api = "0.2"
+side = "client"
+capabilities = []
+
+[native]
+game = "26.3"
+horizon = "f00125f61f794aaa3d4e950d301f353b35b6ee3d"
+mixins = "e59da9094f0c2fdda6c627fe9eff22dec6a906f0"
